@@ -124,4 +124,3 @@ Notifications
 Ajout de plusieurs langues
 
 Mode hors ligne pour les cours (si licences autorisées)
->>>>>>> c66e3db4797024a2c8375ca2a8fc36f3132da764
