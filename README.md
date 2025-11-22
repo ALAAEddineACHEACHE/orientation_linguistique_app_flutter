@@ -1,79 +1,78 @@
-📘 Orientation Linguistique – Application Mobile Flutter
+🌐 Orientation Linguistique – Application Mobile Flutter
+
 📝 Description du projet
 
-Orientation Linguistique est une application mobile développée en Flutter permettant d’évaluer et d’orienter les utilisateurs selon leur niveau de langue grâce à un quiz adaptatif intelligent.
-L’objectif est de proposer une expérience personnalisée où chaque utilisateur reçoit des ressources vidéo adaptées à son niveau : Débutant, Intermédiaire ou Avancé.
+Orientation Linguistique est une application mobile Flutter qui évalue le niveau linguistique d’un utilisateur grâce à un quiz adaptatif intelligent.
+L’objectif est d’offrir une orientation personnalisée avec des contenus vidéo adaptés à chaque niveau :
 
-L’application repose sur une authentification sécurisée via Firebase, un système de scoring dynamique et une interface moderne inspirée des standards du design mobile.
+🟢 Débutant — 🟡 Intermédiaire — 🔵 Avancé
+
+L’application intègre une authentification Firebase, une UI moderne, et une architecture modulaire professionnelle.
 
 🤝 Contributeurs
+Nom	Rôle
+Alae Eddine Acheache	Flutter / Firebase
+Mohamed Aadili	Flutter / UI & Logic
+Alae Azdou	Flutter / Documentation / PPT
 
-Alae Eddine Acheache – Dev Flutter / Firebase
-
-Mohamed Aadili – Dev Flutter / UI & Logic
-
-Alae Azdou - Dev Flutter /Rapports/PPT
-
-Les contributions sont les bienvenues !
+💬 Les contributions sont encouragées et bienvenues !
 
 🎯 Fonctionnalités principales
 🔐 1. Authentification Firebase
 
-Inscription et connexion par e-mail/mot de passe
+Email / Mot de passe
 
-Gestion sécurisée des sessions utilisateur
+Sécurité & gestion de sessions
 
-Enregistrement des profils dans Firestore
+Stockage des profils dans Firestore
 
 🧠 2. Quiz Adaptatif
 
-Série de questions personnalisées
+Questions progressives
 
-Calcul automatique du score
+Calcul auto du score
 
-Classification du niveau :
+Détermination du niveau :
 
-+ Débutant
+🟢 Débutant
 
-+ Intermédiaire
+🟡 Intermédiaire
 
-+ Avancé
+🔵 Avancé
 
 🎓 3. Orientation Intelligente
 
-Selon le score obtenu, l’utilisateur est redirigé automatiquement vers une page contenant des cours YouTube adaptés à son niveau.
-Les vidéos sont regroupées et filtrées selon :
+L’application affiche automatiquement des cours YouTube selon le niveau, filtrés par :
 
-Thématiques
+📚 Thématique
 
-Progrès de l’utilisateur
+📈 Progrès utilisateur
 
-Niveau linguistique
+🏷️ Niveau linguistique
 
-🎨 4. UI Moderne et Responsive
+🎨 4. UI Moderne & Responsive
 
-Design professionnel avec Flutter
+Design professionnel
 
-Interface user-friendly et intuitive
+Composants modernes Flutter
 
-Thème clair/sombre (si ajouté plus tard)
+Navigation intuitive
 
-☁️ 5. Intégration Backend (Firebase)
+Prêt pour thème clair/sombre
+
+☁️ 5. Backend Firebase
 
 Authentification
 
-Stockage des résultats du quiz
+Firestore pour stocker scores et progression
 
-Récupération dynamique des cours selon le niveau
+Requêtes dynamiques pour les contenus selon le niveau
 
 🏗️ Architecture du projet
-
-Le projet suit une architecture claire et modulaire :
-
 lib/
  ├── models/
  ├── services/
- ├── providers/ (ou blocs/)
+ ├── providers/   
  ├── screens/
  │     ├── auth/
  │     ├── quiz/
@@ -81,60 +80,53 @@ lib/
  │     └── home/
  └── utils/
 
+
+Architecture pensée pour être scalable, maintenable et propre.
+
 🛠️ Technologies utilisées
+Technologie	Description
+Flutter 3.x	Framework UI multi-plateforme
+Dart	Langage principal
+Firebase Authentication	Auth utilisateur
+Firestore	Base de données cloud
+YouTube Player Flutter	Intégration des vidéos
+Provider / Bloc	Gestion d’état
+Git / GitHub	Collaboration & versioning
+🌱 Collaboration Git
+Branches principales :
 
-Flutter 3.x (Dart)
+main → branche de production / développement global
 
-Firebase Authentication
-
-Cloud Firestore
-
-Firebase Core
-
-YouTube Player Flutter
-
-Git & GitHub pour la collaboration
-
-Provider / Bloc (selon choix) pour la gestion d’état
-
-🌿 Gestion de projet & Collaboration Git
-
-Deux branches principales :
-
-main → branche principale (développement général)
-
-mohamed_branch → branche secondaire pour le travail collaboratif
+mohamed_branch → développement parallèle collaboratif
 
 Workflow recommandé :
 
-Chaque développeur travaille sur sa branche
-
-Tests + validations
-
-Fusion dans main via pull request ou git merge
+✔️ Travail dans chaque branche
+✔️ Tests et revue
+✔️ PR ou git merge vers main
 
 🚀 Objectifs du projet
 
-Offrir un outil d’orientation linguistique professionnel
+Offrir un outil intelligent d’orientation linguistique
 
-Automatiser la recommandation de ressources d’apprentissage
+Automatiser la recommandation pédagogique
 
-Démontrer une architecture Flutter propre et scalable
+Construire une app Flutter complète (UI + logique + backend)
 
-Construire une application complète (UI + logique + backend)
+Démontrer une architecture propre, scalable et professionnelle
 
 🧪 Évolutions futures
 
-Dashboard de progression
+📊 Dashboard de progression
 
-Quiz plus intelligent (machine learning)
+🤖 Quiz intelligent (machine learning)
 
-Notifications
+🔔 Notifications personnalisées
 
-Ajout de plusieurs langues
+🌍 Multi-langues
 
-Mode hors ligne pour les cours (si licences autorisées)
+📥 Mode hors-ligne pour les cours
 
-📄 License
+📄 Licence
 
 Distribué sous licence MIT.
