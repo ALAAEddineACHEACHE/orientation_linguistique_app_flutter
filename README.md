@@ -6,6 +6,16 @@ L’objectif est de proposer une expérience personnalisée où chaque utilisate
 
 L’application repose sur une authentification sécurisée via Firebase, un système de scoring dynamique et une interface moderne inspirée des standards du design mobile.
 
+🤝 Contributeurs
+
+Alae Eddine Acheache – Dev Flutter / Firebase
+
+Mohamed Aadili – Dev Flutter / UI & Logic
+
+Alae Azdou - Dev Flutter /Rapports/PPT
+
+Les contributions sont les bienvenues !
+
 🎯 Fonctionnalités principales
 🔐 1. Authentification Firebase
 
@@ -124,3 +134,7 @@ Notifications
 Ajout de plusieurs langues
 
 Mode hors ligne pour les cours (si licences autorisées)
+
+📄 License
+
+Distribué sous licence MIT.
