@@ -9,7 +9,8 @@ L’objectif est d’offrir une orientation personnalisée avec des contenus vid
 
 L’application intègre une authentification Firebase, une UI moderne, et une architecture modulaire professionnelle.
 
-🤝 Contributeurs
+🤝 Contributeurs : 
+
  Alae Eddine Acheache – Dev Flutter / Firebase
 
  Mohamed Aadili – Dev Flutter / UI & Logic
