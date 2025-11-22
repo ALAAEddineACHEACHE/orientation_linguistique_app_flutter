@@ -23,11 +23,11 @@ Calcul automatique du score
 
 Classification du niveau :
 
-Débutant
++ Débutant
 
-Intermédiaire
++ Intermédiaire
 
-Avancé
++ Avancé
 
 🎓 3. Orientation Intelligente
 
