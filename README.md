@@ -1,16 +1,127 @@
-# orientation_linguistique_app_flutter
+📘 Orientation Linguistique – Application Mobile Flutter
+📝 Description du projet
 
-A new Flutter project.
+Orientation Linguistique est une application mobile développée en Flutter permettant d’évaluer et d’orienter les utilisateurs selon leur niveau de langue grâce à un quiz adaptatif intelligent.
+L’objectif est de proposer une expérience personnalisée où chaque utilisateur reçoit des ressources vidéo adaptées à son niveau : Débutant, Intermédiaire ou Avancé.
 
-## Getting Started
+L’application repose sur une authentification sécurisée via Firebase, un système de scoring dynamique et une interface moderne inspirée des standards du design mobile.
 
-This project is a starting point for a Flutter application.
+🎯 Fonctionnalités principales
+🔐 1. Authentification Firebase
 
-A few resources to get you started if this is your first Flutter project:
+Inscription et connexion par e-mail/mot de passe
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Gestion sécurisée des sessions utilisateur
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Enregistrement des profils dans Firestore
+
+🧠 2. Quiz Adaptatif
+
+Série de questions personnalisées
+
+Calcul automatique du score
+
+Classification du niveau :
+
++ Débutant
+
++ Intermédiaire
+
++ Avancé
+
+🎓 3. Orientation Intelligente
+
+Selon le score obtenu, l’utilisateur est redirigé automatiquement vers une page contenant des cours YouTube adaptés à son niveau.
+Les vidéos sont regroupées et filtrées selon :
+
+Thématiques
+
+Progrès de l’utilisateur
+
+Niveau linguistique
+
+🎨 4. UI Moderne et Responsive
+
+Design professionnel avec Flutter
+
+Interface user-friendly et intuitive
+
+Thème clair/sombre (si ajouté plus tard)
+
+☁️ 5. Intégration Backend (Firebase)
+
+Authentification
+
+Stockage des résultats du quiz
+
+Récupération dynamique des cours selon le niveau
+
+🏗️ Architecture du projet
+
+Le projet suit une architecture claire et modulaire :
+
+lib/
+ ├── models/
+ ├── services/
+ ├── providers/ (ou blocs/)
+ ├── screens/
+ │     ├── auth/
+ │     ├── quiz/
+ │     ├── levels/
+ │     └── home/
+ └── utils/
+
+🛠️ Technologies utilisées
+
+Flutter 3.x (Dart)
+
+Firebase Authentication
+
+Cloud Firestore
+
+Firebase Core
+
+YouTube Player Flutter
+
+Git & GitHub pour la collaboration
+
+Provider / Bloc (selon choix) pour la gestion d’état
+
+🌿 Gestion de projet & Collaboration Git
+
+Deux branches principales :
+
+main → branche principale (développement général)
+
+mohamed_branch → branche secondaire pour le travail collaboratif
+
+Workflow recommandé :
+
+Chaque développeur travaille sur sa branche
+
+Tests + validations
+
+Fusion dans main via pull request ou git merge
+
+🚀 Objectifs du projet
+
+Offrir un outil d’orientation linguistique professionnel
+
+Automatiser la recommandation de ressources d’apprentissage
+
+Démontrer une architecture Flutter propre et scalable
+
+Construire une application complète (UI + logique + backend)
+
+🧪 Évolutions futures
+
+Dashboard de progression
+
+Quiz plus intelligent (machine learning)
+
+Notifications
+
+Ajout de plusieurs langues
+
+Mode hors ligne pour les cours (si licences autorisées)
+>>>>>>> c66e3db4797024a2c8375ca2a8fc36f3132da764
