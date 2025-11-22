@@ -10,14 +10,16 @@ L’objectif est d’offrir une orientation personnalisée avec des contenus vid
 L’application intègre une authentification Firebase, une UI moderne, et une architecture modulaire professionnelle.
 
 🤝 Contributeurs
-Nom	Rôle
-Alae Eddine Acheache	Flutter / Firebase
-Mohamed Aadili	Flutter / UI & Logic
-Alae Azdou	Flutter / Documentation / PPT
+ Alae Eddine Acheache – Dev Flutter / Firebase
 
-💬 Les contributions sont encouragées et bienvenues !
+ Mohamed Aadili – Dev Flutter / UI & Logic
+
+ Alae Azdou - Dev Flutter /Rapports/PPT 
+   
+ Les contributions sont les bienvenues !
 
 🎯 Fonctionnalités principales
+
 🔐 1. Authentification Firebase
 
 Email / Mot de passe
