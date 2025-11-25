@@ -2,44 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-// ====================== MAIN PROVIDER ======================
-class MainProvider extends ChangeNotifier {
-  ThemeData theme = ThemeData.light();
-
-  void setDarkMode(ThemeData thm) {
-    theme = thm;
-    notifyListeners();
-  }
-}
-
-// ====================== WIDGETS ======================
-class EditBox extends StatelessWidget {
-  final String hint;
-  final bool password;
-
-  const EditBox({super.key, required this.hint, this.password = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      obscureText: password,
-      style: const TextStyle(fontSize: 16, color: Colors.black87),
-      decoration: InputDecoration(
-        hintText: hint,
-        filled: true,
-        fillColor: Colors.grey.shade50,  // PLUS CLAIR
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300, // contour léger et clean
-          ),
-        ),
-      ),
-    );
-  }
-}
+// ====================== IMPORT DES MODULES ======================
+import 'module/mainprovider.dart'; // ✅ Votre provider
+import 'module/widget.dart';       // ✅ Vos widgets (EditBox, etc.)
 
 // ====================== MAIN ======================
 void main() async {
@@ -73,187 +38,227 @@ class MyApp extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          home: const HomePage(),
+          home: LoginPage(),
         );
       },
     );
   }
 }
 
-// ====================== HOME PAGE ======================
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+// ====================== LOGIN PAGE - PROFESSIONAL & CENTERED ======================
+class LoginPage extends StatelessWidget {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final currentLocale = context.locale.languageCode;
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      endDrawer: Drawer(
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              const Text(
-                "Choose Language",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              SwitchListTile(
-                title: const Text("English"),
-                value: context.locale.languageCode == 'en',
-                onChanged: (val) {
-                  context.setLocale(const Locale('en'));
-                  Navigator.pop(context);
-                },
-                secondary:
-                    Image.asset('images/English.png', width: 30, height: 30),
-              ),
-              SwitchListTile(
-                title: const Text("Turkish"),
-                value: context.locale.languageCode == 'tr',
-                onChanged: (val) {
-                  context.setLocale(const Locale('tr'));
-                  Navigator.pop(context);
-                },
-                secondary:
-                    Image.asset('images/Turkey.png', width: 30, height: 30),
-              ),
-            ],
-          ),
-        ),
-      ),
-
-      // ====================== BODY ======================
+      backgroundColor: isDark ? Colors.grey[900] : Colors.grey[50],
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('images/school.png', width: 120, height: 120),
-              const SizedBox(height: 30),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Votre logo school
+                Image.asset(
+                  'images/school.png',
+                  width: 100,
+                  height: 100,
+                ),
+                const SizedBox(height: 30),
 
-              // ====================== LOGIN CARD ======================
-              Container(
-                padding: const EdgeInsets.all(28),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: Colors.grey.shade200,
-                    width: 1,
+                // 🔲 CADRE PROFESSIONNEL AUTOUR DU FORMULAIRE
+                Container(
+                  width: 400,
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.grey[850] : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isDark ? Colors.grey[700]! : Colors.grey[200]!,
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(isDark ? 0.4 : 0.08),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    EditBox(hint: 'username'.tr()),
-                    const SizedBox(height: 20),
-                    EditBox(hint: 'password'.tr(), password: true),
-                    const SizedBox(height: 25),
-
-                    // LOGIN BUTTON
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: Text(
-                          'login'.tr(),
-                          style: const TextStyle(fontSize: 18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 24),
 
-                    const SizedBox(height: 20),
-                    const Text("OR", style: TextStyle(color: Colors.grey)),
-                    const SizedBox(height: 20),
+                      // Champs
+                      EditBox(
+                        hint: 'username'.tr(),
+                        prefixIcon: Icons.person_outline,
+                        controller: _usernameController,
+                      ),
+                      EditBox(
+                        hint: 'password'.tr(),
+                        password: true,
+                        prefixIcon: Icons.lock_outline,
+                        controller: _passwordController,
+                      ),
 
-                    // ====================== FACEBOOK BUTTON ======================
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset('images/Facebook.png',
-                                width: 22, height: 22),
-                            const SizedBox(width: 10),
-                            const Text(
-                              "Facebook",
-                              style: TextStyle(fontSize: 17),
+                      // Mot de passe oublié
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            // TODO
+                          },
+                          child: Text(
+                            'Forgot password?'.tr(),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w500,
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-
-                    // ====================== GOOGLE BUTTON ======================
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset('images/Google.png',
-                                width: 22, height: 22),
-                            const SizedBox(width: 10),
-                            const Text(
-                              "Google",
-                              style: TextStyle(fontSize: 17),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Bouton Login
+                      SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // TODO: Logique
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.indigo.shade700,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ],
+                          ),
+                          child: Text(
+                            'login'.tr(),
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
 
-              const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-              Align(
-                alignment: Alignment.centerRight,
-                child: Builder(
-                  builder: (ctx) => IconButton(
-                    icon: const Icon(Icons.settings,
-                        color: Colors.black, size: 30),
-                    onPressed: () => Scaffold.of(ctx).openEndDrawer(),
+                      // ===== GOOGLE / FACEBOOK =====
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              color: isDark ? Colors.grey[700] : Colors.grey[300],
+                              thickness: 1,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Text(
+                              'OR',
+                              style: TextStyle(
+                                color: isDark ? Colors.grey[500] : Colors.grey[500],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(
+                              color: isDark ? Colors.grey[700] : Colors.grey[300],
+                              thickness: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Google
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: OutlinedButton.icon(
+                          onPressed: () {},
+                          icon: Image.asset('images/Google.png', width: 20, height: 20),
+                          label: const Text('Google'),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            foregroundColor: isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // Facebook
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: OutlinedButton.icon(
+                          onPressed: () {},
+                          icon: Image.asset('images/Facebook.png', width: 20, height: 20),
+                          label: const Text('Facebook'),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            foregroundColor: isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
+      // 🌐 BOUTON LANGUE EN HAUT À DROITE (DISCRET ET PRO)
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: () {
+          if (currentLocale == 'en') {
+            context.setLocale(const Locale('tr'));
+          } else {
+            context.setLocale(const Locale('en'));
+          }
+        },
+        tooltip: currentLocale == 'en' ? 'Switch to Turkish' : 'Switch to English',
+        child: currentLocale == 'en'
+            ? Image.asset('images/Turkey.png', width: 24, height: 24)
+            : Image.asset('images/English.png', width: 24, height: 24),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
 }

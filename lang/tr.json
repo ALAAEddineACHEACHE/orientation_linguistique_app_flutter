@@ -1,7 +1,6 @@
 {
-    "welcome": "Hoşgeldiniz",
-    "username": "Kullanıcı adı",
-    "password": "parola",
-    "login": "oturum aç",
-    "forgot password": "Parolanızı mı unuttunuz!"
+  "username": "Kullanıcı Adı veya E-posta",
+  "password": "Şifre",
+  "login": "Giriş Yap",
+  "Forgot password?": "Şifremi Unuttum"
 }
