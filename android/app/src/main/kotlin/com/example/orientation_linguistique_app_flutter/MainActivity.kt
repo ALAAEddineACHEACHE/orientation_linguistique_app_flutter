@@ -1,5 +1,6 @@
-package com.example.orientation_linguistique_app_flutter
+package com.example.loginui
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity: FlutterActivity() {
+}
