@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'services/auth_service.dart';
+import 'module/mainprovider.dart';
+import 'module/widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// ====================== IMPORT DES MODULES ======================
-import 'module/mainprovider.dart'; // ✅ Votre provider
-import 'module/widget.dart';       // ✅ Vos widgets (EditBox, etc.)
-
-// ====================== MAIN ======================
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -24,7 +24,6 @@ void main() async {
   );
 }
 
-// ====================== MY APP ======================
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -38,19 +37,96 @@ class MyApp extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          home: LoginPage(),
+          home: const LoginPage(),
         );
       },
     );
   }
 }
 
-// ====================== LOGIN PAGE - PROFESSIONAL & CENTERED ======================
-class LoginPage extends StatelessWidget {
+// ====================== LOGIN PAGE ======================
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isLoading = false;
+  final AuthService _auth = AuthService();
 
-  LoginPage({super.key});
+  void loginWithEmailPassword() async {
+    setState(() => isLoading = true);
+
+    String? role = await _auth.login(
+      _usernameController.text.trim(),
+      _passwordController.text.trim(),
+    );
+
+    setState(() => isLoading = false);
+
+    if (role == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Invalid credentials")));
+      return;
+    }
+
+    redirect(role);
+  }
+
+  void loginWithGoogle() async {
+  setState(() => isLoading = true);
+  try {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) {
+      setState(() => isLoading = false);
+      return; // utilisateur annule
+    }
+
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    String email = userCredential.user?.email ?? '';
+    String role = email.contains("admin") ? "admin" : "student";
+
+    setState(() => isLoading = false);
+    redirect(role);
+  } catch (e) {
+    setState(() => isLoading = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Google Sign-In Failed: $e")));
+  }
+}
+
+  void loginWithFacebook() async {
+    setState(() => isLoading = true);
+    String? role = await _auth.loginWithFacebook();
+    setState(() => isLoading = false);
+    if (role != null) redirect(role);
+  }
+
+  void redirect(String role) {
+    if (role == "admin") {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const AdminDashboard()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const StudentHomePage()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,18 +142,10 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Votre logo school
-                Image.asset(
-                  'images/school.png',
-                  width: 100,
-                  height: 100,
-                ),
+                Image.asset('images/school.png', width: 100, height: 100),
                 const SizedBox(height: 30),
-
-                // 🔲 CADRE PROFESSIONNEL AUTOUR DU FORMULAIRE
                 Container(
                   width: 400,
-                  constraints: const BoxConstraints(maxWidth: 400),
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
                     color: isDark ? Colors.grey[850] : Colors.white,
@@ -95,7 +163,6 @@ class LoginPage extends StatelessWidget {
                     ],
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         'Login',
@@ -106,8 +173,6 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 24),
-
-                      // Champs
                       EditBox(
                         hint: 'username'.tr(),
                         prefixIcon: Icons.person_outline,
@@ -119,121 +184,83 @@ class LoginPage extends StatelessWidget {
                         prefixIcon: Icons.lock_outline,
                         controller: _passwordController,
                       ),
-
-                      // Mot de passe oublié
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {
-                            // TODO
-                          },
+                          onPressed: () {},
                           child: Text(
                             'Forgot password?'.tr(),
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-
-                      // Bouton Login
+                      const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
                         height: 52,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Logique
-                          },
+                          onPressed:
+                              isLoading ? null : loginWithEmailPassword,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.indigo.shade700,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text(
-                            'login'.tr(),
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white)
+                              : Text(
+                                  'login'.tr(),
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
-
                       const SizedBox(height: 20),
-
-                      // ===== GOOGLE / FACEBOOK =====
                       Row(
                         children: [
                           Expanded(
-                            child: Divider(
-                              color: isDark ? Colors.grey[700] : Colors.grey[300],
-                              thickness: 1,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Text(
-                              'OR',
-                              style: TextStyle(
-                                color: isDark ? Colors.grey[500] : Colors.grey[500],
-                                fontSize: 14,
-                              ),
-                            ),
+                              child: Divider(
+                                  color: isDark
+                                      ? Colors.grey[700]
+                                      : Colors.grey[300])),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12),
+                            child: Text("OR"),
                           ),
                           Expanded(
-                            child: Divider(
-                              color: isDark ? Colors.grey[700] : Colors.grey[300],
-                              thickness: 1,
-                            ),
-                          ),
+                              child: Divider(
+                                  color: isDark
+                                      ? Colors.grey[700]
+                                      : Colors.grey[300])),
                         ],
                       ),
-
                       const SizedBox(height: 16),
-
                       // Google
                       SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: Image.asset('images/Google.png', width: 20, height: 20),
+                          onPressed: isLoading ? null : loginWithGoogle,
+                          icon: Image.asset('images/Google.png', width: 20),
                           label: const Text('Google'),
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            foregroundColor: isDark ? Colors.white : Colors.black87,
-                          ),
                         ),
                       ),
-
                       const SizedBox(height: 12),
-
                       // Facebook
                       SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: Image.asset('images/Facebook.png', width: 20, height: 20),
+                          onPressed: isLoading ? null : loginWithFacebook,
+                          icon: Image.asset('images/Facebook.png', width: 20),
                           label: const Text('Facebook'),
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            foregroundColor: isDark ? Colors.white : Colors.black87,
-                          ),
                         ),
                       ),
                     ],
@@ -244,7 +271,6 @@ class LoginPage extends StatelessWidget {
           ),
         ),
       ),
-      // 🌐 BOUTON LANGUE EN HAUT À DROITE (DISCRET ET PRO)
       floatingActionButton: FloatingActionButton.small(
         onPressed: () {
           if (currentLocale == 'en') {
@@ -253,12 +279,74 @@ class LoginPage extends StatelessWidget {
             context.setLocale(const Locale('en'));
           }
         },
-        tooltip: currentLocale == 'en' ? 'Switch to Turkish' : 'Switch to English',
         child: currentLocale == 'en'
-            ? Image.asset('images/Turkey.png', width: 24, height: 24)
-            : Image.asset('images/English.png', width: 24, height: 24),
+            ? Image.asset('images/Turkey.png', width: 24)
+            : Image.asset('images/English.png', width: 24),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+    );
+  }
+}
+
+// ====================== STUDENT DASHBOARD ======================
+class StudentHomePage extends StatelessWidget {
+  const StudentHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Student Dashboard"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              // Logout -> retour vers LoginPage
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginPage()));
+            },
+          )
+        ],
+      ),
+      body: const Center(
+        child: Text(
+          "Bienvenue étudiant 👋\nQuiz linguistique bientôt...",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 22),
+        ),
+      ),
+    );
+  }
+}
+
+// ====================== ADMIN DASHBOARD ======================
+class AdminDashboard extends StatelessWidget {
+  const AdminDashboard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Admin Dashboard"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginPage()));
+            },
+          )
+        ],
+      ),
+      body: const Center(
+        child: Text(
+          "Bienvenue Admin 👑\nInterface de gestion vide pour l'instant.",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 22),
+        ),
+      ),
     );
   }
 }
