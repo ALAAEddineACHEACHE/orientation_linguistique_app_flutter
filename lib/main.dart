@@ -6,6 +6,9 @@ import 'services/auth_service.dart';
 import 'module/mainprovider.dart';
 import 'module/widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'pages/student_home.dart';
+import 'providers/quiz_provider.dart'; // <-- Import QuizProvider
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,13 +19,17 @@ void main() async {
       supportedLocales: const [Locale('en'), Locale('tr')],
       path: 'lang/',
       fallbackLocale: const Locale('en'),
-      child: ChangeNotifierProvider(
-        create: (_) => MainProvider(),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => MainProvider()),
+          ChangeNotifierProvider(create: (_) => QuizProvider()), // <-- ajouté
+        ],
         child: const MyApp(),
       ),
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -123,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const StudentHomePage()),
+        MaterialPageRoute(builder: (_) => StudentHomePage()),
       );
     }
   }
@@ -289,36 +296,7 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 // ====================== STUDENT DASHBOARD ======================
-class StudentHomePage extends StatelessWidget {
-  const StudentHomePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Student Dashboard"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              // Logout -> retour vers LoginPage
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginPage()));
-            },
-          )
-        ],
-      ),
-      body: const Center(
-        child: Text(
-          "Bienvenue étudiant 👋\nQuiz linguistique bientôt...",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 22),
-        ),
-      ),
-    );
-  }
-}
 
 // ====================== ADMIN DASHBOARD ======================
 class AdminDashboard extends StatelessWidget {
