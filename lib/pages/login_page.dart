@@ -4,6 +4,8 @@ import '../services/auth_service.dart';
 import 'student_home.dart';
 import 'admin_dashboard.dart';
 import '../module/widget.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,10 +19,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _password = TextEditingController();
 
   bool isLoading = false;
-
   final AuthService _auth = AuthService();
 
-  // ------------------ LOGIN CLASSIQUE ------------------
   Future<void> login() async {
     setState(() => isLoading = true);
 
@@ -32,45 +32,36 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => isLoading = false);
 
     if (role == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid credentials")),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Invalid credentials")));
       return;
     }
 
-    redirect(role!);
+    redirect(role);
   }
 
-  // ------------------ GOOGLE LOGIN ------------------
-  Future<void> loginGoogle() async {
-    setState(() => isLoading = true);
+ Future<void> loginGoogle() async {
+  setState(() => isLoading = true);
 
-    String? role = await _auth.loginWithGoogle();
+  String? role = await _auth.loginWithGoogle();
 
-    setState(() => isLoading = false);
+  setState(() => isLoading = false);
 
-    if (role == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Google Login Failed")),
-      );
-      return;
-    }
-
-    redirect(role!);
+  if (role != null) {
+    redirect(role);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Google login failed")),
+    );
   }
+}
 
-  // ------------------ FACEBOOK LOGIN ------------------
+
   Future<void> loginFacebook() async {
-    setState(() => isLoading = true);
-
     String? role = await _auth.loginWithFacebook();
-
-    setState(() => isLoading = false);
-
-    redirect(role!);
+    if (role != null) redirect(role);
   }
 
-  // ------------------ REDIRECTION ------------------
   void redirect(String role) {
     if (role == "admin") {
       Navigator.pushReplacement(
@@ -90,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? Colors.grey[900] : Colors.grey[50],
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -108,8 +100,8 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
                         blurRadius: 20,
+                        color: Colors.black.withOpacity(0.1),
                       )
                     ],
                   ),
@@ -140,7 +132,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
 
                       const SizedBox(height: 15),
-
                       Row(
                         children: [
                           Expanded(child: Divider(color: Colors.grey[400])),
@@ -151,15 +142,13 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(child: Divider(color: Colors.grey[400])),
                         ],
                       ),
-
                       const SizedBox(height: 15),
 
-                      // GOOGLE
                       SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: OutlinedButton.icon(
-                          onPressed: () => loginGoogle(),
+                          onPressed: loginGoogle,
                           icon: Image.asset('images/Google.png', width: 22),
                           label: const Text("Sign in with Google"),
                         ),
@@ -167,12 +156,11 @@ class _LoginPageState extends State<LoginPage> {
 
                       const SizedBox(height: 12),
 
-                      // FACEBOOK
                       SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: OutlinedButton.icon(
-                          onPressed: () => loginFacebook(),
+                          onPressed: loginFacebook,
                           icon: Image.asset('images/Facebook.png', width: 22),
                           label: const Text("Sign in with Facebook"),
                         ),

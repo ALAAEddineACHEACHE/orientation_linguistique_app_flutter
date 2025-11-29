@@ -37,6 +37,7 @@ dependencies:
   firebase_auth: ^5.0.0
   google_sign_in: ^6.2.1
   url_launcher: ^6.1.12
+  flutter_facebook_auth: ^6.0.5
 fonts:
     - family: Poppins
       fonts:
