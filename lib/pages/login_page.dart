@@ -21,6 +21,11 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
   final AuthService _auth = AuthService();
 
+  // ✅ GoogleSignIn avec clientId pour Web
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: "598730973278-51kurjt3pp0n0q82gruvqt12u2chqudq.apps.googleusercontent.com",
+  );
+
   Future<void> login() async {
     setState(() => isLoading = true);
 
@@ -40,22 +45,21 @@ class _LoginPageState extends State<LoginPage> {
     redirect(role);
   }
 
- Future<void> loginGoogle() async {
-  setState(() => isLoading = true);
+  Future<void> loginGoogle() async {
+    setState(() => isLoading = true);
 
-  String? role = await _auth.loginWithGoogle();
+    String? role = await _auth.loginWithGoogle(_googleSignIn);
 
-  setState(() => isLoading = false);
+    setState(() => isLoading = false);
 
-  if (role != null) {
-    redirect(role);
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Google login failed")),
-    );
+    if (role != null) {
+      redirect(role);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Google login failed")),
+      );
+    }
   }
-}
-
 
   Future<void> loginFacebook() async {
     String? role = await _auth.loginWithFacebook();
