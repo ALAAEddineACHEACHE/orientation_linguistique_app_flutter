@@ -62,8 +62,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> loginFacebook() async {
+    setState(() => isLoading = true);
     String? role = await _auth.loginWithFacebook();
-    if (role != null) redirect(role);
+    setState(() => isLoading = false);
+    if (role != null) {
+      redirect(role);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Facebook login failed")),
+      );
+    }
   }
 
   void redirect(String role) {
@@ -154,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: OutlinedButton.icon(
                           onPressed: loginGoogle,
                           icon: Image.asset('images/Google.png', width: 22),
-                          label: const Text("Sign in with Google"),
+                          label: Text("Sign in with Google".tr()),
                         ),
                       ),
 
@@ -166,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: OutlinedButton.icon(
                           onPressed: loginFacebook,
                           icon: Image.asset('images/Facebook.png', width: 22),
-                          label: const Text("Sign in with Facebook"),
+                          label: Text("Sign in with Facebook".tr()),
                         ),
                       ),
                     ],

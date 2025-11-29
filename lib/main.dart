@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 
 import 'module/mainprovider.dart';
 import 'providers/quiz_provider.dart';
+import 'providers/student_provider.dart'; // 👈 Ajouté
 import 'pages/login_page.dart';
 
 void main() async {
@@ -25,6 +26,7 @@ void main() async {
         providers: [
           ChangeNotifierProvider(create: (_) => MainProvider()),
           ChangeNotifierProvider(create: (_) => QuizProvider()),
+          ChangeNotifierProvider(create: (_) => StudentProvider()), // 👈 Important
         ],
         child: const MyApp(),
       ),
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          home: const LoginPage(),   // 👈 Maintenant LoginPage est dans son propre fichier
+          home: const LoginPage(),
         );
       },
     );
