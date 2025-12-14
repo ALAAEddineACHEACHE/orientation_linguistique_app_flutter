@@ -9,6 +9,7 @@ import 'bloc/auth_bloc.dart';
 import 'module/mainprovider.dart';
 import 'providers/quiz_provider.dart';
 import 'pages/splash_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 
 /// Point d’entrée principal de l’application Flutter
@@ -27,6 +28,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+await Hive.initFlutter();
+await Hive.openBox('appBox');
 
   // Lancement de l’application avec :
   // - Localisation

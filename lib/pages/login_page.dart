@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../services/auth_service.dart';
-import 'student_home.dart';
-import 'admin_dashboard.dart';
-import '../module/widget.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/auth_service.dart';
+import '../storage/local_storage.dart';
+import '../module/widget.dart';
+import 'student_home.dart';
+import 'admin_dashboard.dart';
+
 /// Page de connexion utilisateur
-/// Gère :
 /// - Login classique
 /// - Login Google
-/// - Login Facebook
+/// - Sauvegarde de session
 /// - Redirection selon le rôle
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,19 +22,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-    // Controllers pour les champs texte
+  // Controllers champs texte
   final TextEditingController _username = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  // Indicateur de chargement UI
+
   bool isLoading = false;
-    // Service d’authentification
+
   final AuthService _auth = AuthService();
 
-  // ✅ GoogleSignIn avec clientId pour Web
+  // Google Sign-In (Web compatible)
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: "598730973278-51kurjt3pp0n0q82gruvqt12u2chqudq.apps.googleusercontent.com",
+    clientId:
+        "598730973278-51kurjt3pp0n0q82gruvqt12u2chqudq.apps.googleusercontent.com",
   );
 
+  // -------------------- LOGIN CLASSIQUE --------------------
   Future<void> login() async {
     setState(() => isLoading = true);
 
@@ -46,14 +48,16 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => isLoading = false);
 
     if (role == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Invalid credentials")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Invalid credentials")),
+      );
       return;
     }
 
-    redirect(role);
+    await _handleLoginSuccess(role);
   }
 
+  // -------------------- LOGIN GOOGLE --------------------
   Future<void> loginGoogle() async {
     setState(() => isLoading = true);
 
@@ -62,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => isLoading = false);
 
     if (role != null) {
-      redirect(role);
+      await _handleLoginSuccess(role);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Google login failed")),
@@ -70,33 +74,38 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // Future<void> loginFacebook() async {
-  //   String? role = await _auth.loginWithFacebook();
-  //   if (role != null) redirect(role);
-  // }
-/// Redirection centralisée selon le rôle utilisateur
-void redirect(String role) async {
-  await _saveSession(role);
+  // -------------------- POST-LOGIN --------------------
+ Future<void> _handleLoginSuccess(String role) async {
+  // 1️⃣ Hive : stockage persistant (rôle)
+  // Si saveRole n'est pas async, on retire l'await
+  LocalStorage.saveRole(role);
 
-  if (role == "admin") {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const AdminDashboard()),
-    );
-  } else {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const StudentHomePage()),
-    );
-  }
-}
-Future<void> _saveSession(String role) async {
+  // 2️⃣ SharedPreferences : état de session
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool('isLoggedIn', true);
   await prefs.setString('role', role);
+
+  // 3️⃣ Navigation UNIQUEMENT après succès complet
+  if (!mounted) return;
+
+  redirect(role);
 }
+  // -------------------- REDIRECTION --------------------
+  void redirect(String role) {
+    if (role == "admin") {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const AdminDashboard()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const StudentHomePage()),
+      );
+    }
+  }
 
-
+  // -------------------- UI --------------------
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -147,7 +156,8 @@ Future<void> _saveSession(String role) async {
                         child: ElevatedButton(
                           onPressed: isLoading ? null : login,
                           child: isLoading
-                              ? const CircularProgressIndicator(color: Colors.white)
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white)
                               : Text("login".tr()),
                         ),
                       ),
@@ -174,18 +184,6 @@ Future<void> _saveSession(String role) async {
                           label: const Text("Sign in with Google"),
                         ),
                       ),
-
-                      const SizedBox(height: 12),
-
-                      // SizedBox(
-                      //   width: double.infinity,
-                      //   height: 48,
-                      //   child: OutlinedButton.icon(
-                      //     onPressed: loginFacebook,
-                      //     icon: Image.asset('images/Facebook.png', width: 22),
-                      //     label: const Text("Sign in with Facebook"),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
