@@ -10,8 +10,6 @@ import 'module/mainprovider.dart';
 import 'providers/quiz_provider.dart';
 import 'pages/splash_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-
 /// Point d’entrée principal de l’application Flutter
 /// - Initialise Flutter
 /// - Initialise Firebase
@@ -30,7 +28,6 @@ void main() async {
   );
 await Hive.initFlutter();
 await Hive.openBox('appBox');
-
   // Lancement de l’application avec :
   // - Localisation
   // - Providers globaux

@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-/// Service responsable de toute la logique d’authentification
-/// - Login classique
-/// - Login Google (OAuth2)
-/// - Login Facebook (préparé)
-/// - Logout
+// Service responsable de toute la logique d’authentification
+// - Login classique
+// - Login Google (OAuth2)
+// - Logout
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -22,10 +21,10 @@ class AuthService {
     return null;
   }
 
-  /// 🔹 Login avec Google (OAuth2 via Firebase)
-  /// - Ouvre une fenêtre Google externe
-  /// - Authentifie l’utilisateur
-  /// - Retourne le rôle selon l’email
+  //🔹 Login avec Google (OAuth2 via Firebase)
+  // - Ouvre une fenêtre Google externe
+  // - Authentifie l’utilisateur
+  // - Retourne le rôle selon l’email
   Future<String?> loginWithGoogle(GoogleSignIn googleSignIn) async {
     try {
       // Démarrage du flow OAuth Google
@@ -61,15 +60,7 @@ class AuthService {
       return null;
     }
   }
-
-  /// 🔹 Login Facebook
-  /// (Préparé pour intégration OAuth réelle)
-  // Future<String?> loginWithFacebook() async {
-  //   await Future.delayed(const Duration(seconds: 1));
-  //   return "student";
-  // }
-
-  /// 🔹 Déconnexion utilisateur
+  // 🔹 Déconnexion utilisateur
   Future<void> logout() async {
     await _auth.signOut();
   }

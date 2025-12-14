@@ -6,6 +6,7 @@ import '../models/quiz_result.dart';
 /// - Enregistrement des réponses
 /// - Calcul du score final
 /// - Détermination du niveau de l’étudiant
+// Distribuer une instance de modèle à l’arbre de widgets 
 class QuizProvider extends ChangeNotifier {
     /// Index de la question courante
   int index = 0;
