@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../models/quiz_result.dart';
 import 'recommendations_page.dart';
-
+/// Page des résultats du quiz
+/// - Affiche score et niveau
+/// - Redirige vers les recommandations
 class QuizResultPage extends StatelessWidget {
   final QuizResult result;
   const QuizResultPage({super.key, required this.result});

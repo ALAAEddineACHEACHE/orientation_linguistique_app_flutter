@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Widget personnalisé pour les champs de saisie
+/// - Compatible mode clair / sombre
+/// - Supporte les mots de passe
+/// - Icône optionnelle
 class EditBox extends StatelessWidget {
   final String hint;
   final bool password;

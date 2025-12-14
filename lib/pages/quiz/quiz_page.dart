@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/quiz_provider.dart';
 import 'quiz_result_page.dart';
-
+/// Page du quiz
+/// - Affiche les questions
+/// - Gère les réponses
+/// - Calcule le score final
 class QuizPage extends StatelessWidget {
   const QuizPage({super.key});
 

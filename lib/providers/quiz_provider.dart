@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import '../models/quiz_question.dart';
 import '../models/quiz_result.dart';
-
+/// Provider responsable de la logique métier du quiz
+/// - Gestion de la navigation entre questions
+/// - Enregistrement des réponses
+/// - Calcul du score final
+/// - Détermination du niveau de l’étudiant
 class QuizProvider extends ChangeNotifier {
+    /// Index de la question courante
   int index = 0;
+    /// Score total obtenu par l’étudiant
   int score = 0;
-
+  /// Liste des réponses sélectionnées par l’utilisateur
+  /// Chaque position correspond à l’index d’une question
   List<int?> answers = List.filled(10, null);
-
+  /// Liste statique des questions du quiz
+  /// Réparties en trois catégories :
+  /// - Spring Boot
+  /// - English
+  /// - Français
   final List<QuizQuestion> questions = [
     // ---------------- SPRING BOOT ----------------
     QuizQuestion(
@@ -79,6 +90,9 @@ class QuizProvider extends ChangeNotifier {
   ];
 
   // ------------------ Sélection réponse ------------------
+  
+  /// Enregistre la réponse choisie par l’étudiant
+  /// puis notifie l’interface pour mise à jour immédiate
   void selectAnswer(int? value) {
     answers[index] = value;
     notifyListeners();
@@ -110,7 +124,7 @@ class QuizProvider extends ChangeNotifier {
     return QuizResult(totalScore: score, level: level);
   }
 
-  // ------------------ Reset quiz (si étudiant recommence) ------------------
+  // ------------------ Reset quiz Réinitialise le quiz afin de permettre à l’étudiant de recommencer l’évaluation ------------------
   void resetQuiz() {
     index = 0;
     score = 0;

@@ -6,7 +6,14 @@ import 'admin_dashboard.dart';
 import '../module/widget.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+/// Page de connexion utilisateur
+/// Gère :
+/// - Login classique
+/// - Login Google
+/// - Login Facebook
+/// - Redirection selon le rôle
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -15,10 +22,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+    // Controllers pour les champs texte
   final TextEditingController _username = TextEditingController();
   final TextEditingController _password = TextEditingController();
-
+  // Indicateur de chargement UI
   bool isLoading = false;
+    // Service d’authentification
   final AuthService _auth = AuthService();
 
   // ✅ GoogleSignIn avec clientId pour Web
@@ -61,24 +70,32 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> loginFacebook() async {
-    String? role = await _auth.loginWithFacebook();
-    if (role != null) redirect(role);
-  }
+  // Future<void> loginFacebook() async {
+  //   String? role = await _auth.loginWithFacebook();
+  //   if (role != null) redirect(role);
+  // }
+/// Redirection centralisée selon le rôle utilisateur
+void redirect(String role) async {
+  await _saveSession(role);
 
-  void redirect(String role) {
-    if (role == "admin") {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const AdminDashboard()),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const StudentHomePage()),
-      );
-    }
+  if (role == "admin") {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const AdminDashboard()),
+    );
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const StudentHomePage()),
+    );
   }
+}
+Future<void> _saveSession(String role) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('isLoggedIn', true);
+  await prefs.setString('role', role);
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,15 +177,15 @@ class _LoginPageState extends State<LoginPage> {
 
                       const SizedBox(height: 12),
 
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: OutlinedButton.icon(
-                          onPressed: loginFacebook,
-                          icon: Image.asset('images/Facebook.png', width: 22),
-                          label: const Text("Sign in with Facebook"),
-                        ),
-                      ),
+                      // SizedBox(
+                      //   width: double.infinity,
+                      //   height: 48,
+                      //   child: OutlinedButton.icon(
+                      //     onPressed: loginFacebook,
+                      //     icon: Image.asset('images/Facebook.png', width: 22),
+                      //     label: const Text("Sign in with Facebook"),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

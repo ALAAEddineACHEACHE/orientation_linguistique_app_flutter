@@ -3,7 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'login_page.dart';
 import 'quiz/quiz_page.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+/// Dashboard principal de l’étudiant
+/// - Affichage animé
+/// - Accès au quiz
+/// - Déconnexion sécurisée
 class StudentHomePage extends StatefulWidget {
   const StudentHomePage({super.key});
 
@@ -19,7 +23,10 @@ class _StudentHomePageState extends State<StudentHomePage>
   late Animation<double> _fade;
   late Animation<double> _scale;
   late Animation<Offset> _slide;
-
+/// Initialise les animations d’entrée
+/// - Fade
+/// - Scale
+/// - Slide
   @override
   void initState() {
     super.initState();
@@ -53,25 +60,20 @@ class _StudentHomePageState extends State<StudentHomePage>
 
     _controller.forward(); // Lance l’animation
   }
+/// Déconnexion complète :
+/// - Firebase
+/// - Google
+/// - Redirection vers Login
+  Future<void> logout(BuildContext context) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
 
-  // Logout
-  Future<void> _logout(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      final google = GoogleSignIn();
-      try {
-        await google.disconnect();
-      } catch (_) {}
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (_) => const LoginPage()),
+  );
+}
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
-
-    } catch (e) {
-      print("Logout error: $e");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -544,7 +546,7 @@ class _StudentHomePageState extends State<StudentHomePage>
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          _logout(context);
+                          logout(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue.shade700,

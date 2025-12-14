@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart'; // <-- ajout nécessaire
-
+/// Page de recommandations pédagogiques
+/// - Vidéos YouTube selon le niveau
+/// - Ouverture externe via url_launcher
 class RecommendationsPage extends StatelessWidget {
   final String level;
   const RecommendationsPage({super.key, required this.level});
