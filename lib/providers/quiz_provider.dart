@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/quiz_question.dart';
-import '../models/quiz_result.dart';
+import '../models/QuizQuestion.dart';
+import '../models/QuizResult.dart';
 /// Provider responsable de la logique métier du quiz
 /// - Gestion de la navigation entre questions
 /// - Enregistrement des réponses

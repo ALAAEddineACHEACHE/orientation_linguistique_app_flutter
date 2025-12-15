@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/quiz_result.dart';
+import '../../models/QuizResult.dart';
 import 'recommendations_page.dart';
 /// Page des résultats du quiz
 /// - Affiche score et niveau
